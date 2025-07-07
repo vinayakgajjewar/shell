@@ -87,7 +87,6 @@ char **split_line(char *line) {
 
 int launch(char **args) {
     pid_t pid;
-    __attribute__((unused)) pid_t wpid;
     int status;
     pid = fork();
     if (pid == 0) {
@@ -111,7 +110,8 @@ int launch(char **args) {
          * We are in the parent process.
          */
         do {
-            wpid = waitpid(pid, &status, WUNTRACED);
+            __attribute__((unused))
+            pid_t wpid = waitpid(pid, &status, WUNTRACED);
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
     return 1;
