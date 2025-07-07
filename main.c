@@ -8,7 +8,7 @@ static const char *PROMPT = "> ";
 
 #define LSH_RL_BUFSIZE 1024
 
-char *lsh_read_line(void) {
+char *read_line(void) {
     int bufsize = LSH_RL_BUFSIZE;
     int position = 0;
     char *buffer = malloc(sizeof(char) * bufsize);
@@ -54,7 +54,7 @@ char *lsh_read_line(void) {
  * We're just going to use whitespace to separate arguments. Quoting or
  * backslash escaping will not be supported.
  */
-char **lsh_split_line(char *line) {
+char **split_line(char *line) {
     int bufsize = LSH_TOK_BUFSIZE;
     int position = 0;
     char **tokens = malloc(bufsize * sizeof(char *));
@@ -81,7 +81,7 @@ char **lsh_split_line(char *line) {
     return tokens;
 }
 
-int lsh_launch(char **args) {
+int launch(char **args) {
     pid_t pid;
     __attribute__((unused)) pid_t wpid;
     int status;
@@ -169,7 +169,7 @@ int lsh_exit() {
     return 0;
 }
 
-int lsh_execute(char **args) {
+int execute(char **args) {
 
     /*
      * Handle the case where the user enters an empty string or nothing but
@@ -183,24 +183,24 @@ int lsh_execute(char **args) {
             return (*builtin_func[i])(args);
         }
     }
-    return lsh_launch(args);
+    return launch(args);
 }
 
-void lsh_loop(void) {
+void loop(void) {
     char *line;
     char **args;
     int status;
     do {
         printf("%s", PROMPT);
-        line = lsh_read_line();
-        args = lsh_split_line(line);
-        status = lsh_execute(args);
+        line = read_line();
+        args = split_line(line);
+        status = execute(args);
         free(line);
         free(args);
     } while (status);
 }
 
 int main(void) {
-    lsh_loop();
+    loop();
     return EXIT_SUCCESS;
 }
