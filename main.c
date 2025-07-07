@@ -38,10 +38,12 @@ char *read_line(void) {
          */
         if (position >= bufsize) {
             bufsize += LSH_RL_BUFSIZE;
-            buffer = realloc(buffer, bufsize);
-            if (!buffer) {
+            char *new_buffer = realloc(buffer, bufsize);
+            if (!new_buffer) {
                 fprintf(stderr, "Error reallocating buffer space\n");
                 exit(EXIT_FAILURE);
+            } else {
+                buffer = new_buffer;
             }
         }
     }
@@ -69,10 +71,12 @@ char **split_line(char *line) {
         position++;
         if (position >= bufsize) {
             bufsize += LSH_TOK_BUFSIZE;
-            tokens = realloc(tokens, bufsize * sizeof(char *));
-            if (!tokens) {
+            char **new_tokens = realloc(tokens, bufsize * sizeof(char *));
+            if (!new_tokens) {
                 fprintf(stderr, "Allocation error\n");
                 exit(EXIT_FAILURE);
+            } else {
+                tokens = new_tokens;
             }
         }
         token = strtok(NULL, LSH_TOK_DELIM);
